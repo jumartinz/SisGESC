@@ -71,7 +71,7 @@ Os fluxos foram desenhados para cobrir as jornadas críticas da instituição, i
 
 Para a construção dos modelos visuais, está sendo utilizada a ferramenta **Draw.io**, permitindo uma documentação clara, padronizada e de fácil manutenção para a evolução do ERP.
 
-#Ciclo de Desenvolvimento e Etapas do Projeto
+# Ciclo de Desenvolvimento e Etapas do Projeto
 
 O projeto é conduzido através de um roteiro metodológico que garante a transição entre o entendimento do negócio e a implementação técnica de alto nível. As etapas foram divididas nos seguintes marcos:
 
