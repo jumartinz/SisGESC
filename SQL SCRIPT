@@ -1,0 +1,183 @@
+--  SISTEMA ARARA AZUL: GESTÃO ESCOLAR INTEGRADA
+CREATE DATABASE IF NOT EXISTS arara_azul;
+USE arara_azul;
+
+-- 1. NÚCLEO PESSOA
+CREATE TABLE tb_pessoa (
+    pk_pessoa        INT          NOT NULL AUTO_INCREMENT,
+    cpf              CHAR(11)     NOT NULL,
+    rg               VARCHAR(15),
+    nome_completo    VARCHAR(150) NOT NULL,
+    sexo             ENUM('masculino','feminino','outro') NOT NULL DEFAULT 'feminino',
+    data_nascimento  DATE NOT NULL,
+    nacionalidade    VARCHAR(60)  NOT NULL DEFAULT 'Brasileira',
+    raca_cor         ENUM('branca','negra','parda','amarela','indígena') NOT NULL DEFAULT 'parda',
+    criado_em        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT pk_pessoa     PRIMARY KEY (pk_pessoa),
+    CONSTRAINT uq_pessoa_cpf UNIQUE (cpf)
+);
+
+-- 2. LOCALIZAÇÃO E CONTATOS
+CREATE TABLE tb_endereco (
+    pk_endereco   INT          NOT NULL AUTO_INCREMENT,
+    fk_pessoa     INT          NOT NULL,
+    cep           CHAR(8)      NOT NULL,
+    logradouro    VARCHAR(150) NOT NULL,
+    numero        VARCHAR(10)  NOT NULL,
+    complemento   VARCHAR(100),
+    bairro        VARCHAR(80)  NOT NULL,
+    cidade        VARCHAR(80)  NOT NULL,
+    uf            CHAR(2)      NOT NULL,
+    principal     BOOL         NOT NULL DEFAULT FALSE,
+    CONSTRAINT pk_endereco PRIMARY KEY (pk_endereco),
+    CONSTRAINT fk_endereco_pessoa FOREIGN KEY (fk_pessoa) 
+        REFERENCES tb_pessoa (pk_pessoa) ON DELETE CASCADE
+);
+
+CREATE TABLE tb_email (
+    pk_email   INT          NOT NULL AUTO_INCREMENT,
+    fk_pessoa  INT          NOT NULL,
+    email      VARCHAR(150) NOT NULL,
+    principal  BOOL         NOT NULL DEFAULT FALSE,
+    CONSTRAINT pk_email PRIMARY KEY (pk_email),
+    CONSTRAINT uq_email UNIQUE (email),
+    CONSTRAINT fk_email_pessoa FOREIGN KEY (fk_pessoa) 
+        REFERENCES tb_pessoa (pk_pessoa) ON DELETE CASCADE
+);
+
+CREATE TABLE tb_telefone (
+    pk_telefone INT          NOT NULL AUTO_INCREMENT,
+    fk_pessoa   INT          NOT NULL,
+    ddd         CHAR(2)      NOT NULL,
+    numero      VARCHAR(9)   NOT NULL,
+    tipo        ENUM('celular', 'residencial', 'comercial') NOT NULL,
+    principal   BOOL         NOT NULL DEFAULT FALSE,
+    CONSTRAINT pk_telefone PRIMARY KEY (pk_telefone),
+    CONSTRAINT fk_tel_pessoa FOREIGN KEY (fk_pessoa) 
+        REFERENCES tb_pessoa (pk_pessoa) ON DELETE CASCADE
+);
+
+-- 3. RECURSOS HUMANOS
+CREATE TABLE tb_cargo (
+    pk_cargo   INT          NOT NULL AUTO_INCREMENT,
+    nome_cargo VARCHAR(80)  NOT NULL,
+    descricao  TEXT,
+    ativo      BOOL         NOT NULL DEFAULT TRUE,
+    CONSTRAINT pk_cargo PRIMARY KEY (pk_cargo),
+    CONSTRAINT uq_cargo_nome UNIQUE (nome_cargo)
+);
+
+CREATE TABLE tb_funcionario (
+    pk_funcionario INT  NOT NULL AUTO_INCREMENT,
+    fk_pessoa      INT  NOT NULL,
+    fk_cargo       INT  NOT NULL,
+    data_admissao  DATE NOT NULL,
+    salario_base   DECIMAL(10,2) NOT NULL,
+    ativo          BOOL NOT NULL DEFAULT TRUE,
+    CONSTRAINT pk_funcionario PRIMARY KEY (pk_funcionario),
+    CONSTRAINT uq_func_pessoa UNIQUE (fk_pessoa),
+    CONSTRAINT fk_func_pessoa FOREIGN KEY (fk_pessoa) REFERENCES tb_pessoa (pk_pessoa),
+    CONSTRAINT fk_func_cargo  FOREIGN KEY (fk_cargo) REFERENCES tb_cargo (pk_cargo)
+);
+
+CREATE TABLE tb_professor (
+    pk_professor    INT  NOT NULL AUTO_INCREMENT,
+    fk_funcionario  INT  NOT NULL,
+    area_formacao   VARCHAR(100) NOT NULL,
+    especializacao  VARCHAR(150),
+    CONSTRAINT pk_professor PRIMARY KEY (pk_professor),
+    CONSTRAINT uq_prof_func UNIQUE (fk_funcionario),
+    CONSTRAINT fk_prof_func FOREIGN KEY (fk_funcionario) REFERENCES tb_funcionario (pk_funcionario)
+);
+
+-- 4. ESTRUTURA ACADÊMICA
+CREATE TABLE tb_ano_letivo (
+    pk_ano_letivo INT  NOT NULL AUTO_INCREMENT,
+    ano           YEAR NOT NULL,
+    data_inicio   DATE NOT NULL,
+    data_fim      DATE NOT NULL,
+    ativo         BOOL NOT NULL DEFAULT FALSE,
+    CONSTRAINT pk_ano_letivo PRIMARY KEY (pk_ano_letivo),
+    CONSTRAINT uq_ano_letivo_ano UNIQUE (ano)
+);
+
+CREATE TABLE tb_turma (
+    pk_turma          INT      NOT NULL AUTO_INCREMENT,
+    fk_ano_letivo     INT      NOT NULL,
+    nome_turma        VARCHAR(20) NOT NULL,
+    nivel_ensino      ENUM('Fundamental I', 'Fundamental II', 'Médio') NOT NULL,
+    serie             TINYINT  NOT NULL,
+    periodo           ENUM('Manhã', 'Tarde', 'Noite', 'Integral') NOT NULL,
+    capacidade_max    TINYINT  UNSIGNED DEFAULT 40,
+    CONSTRAINT pk_turma PRIMARY KEY (pk_turma),
+    CONSTRAINT fk_turma_ano FOREIGN KEY (fk_ano_letivo) REFERENCES tb_ano_letivo (pk_ano_letivo)
+);
+
+-- 5. GESTÃO DE ALUNOS
+CREATE TABLE tb_aluno (
+    pk_ra             VARCHAR(20) NOT NULL,
+    fk_pessoa         INT         NOT NULL,
+    data_ingresso     DATE        NOT NULL,
+    status_aluno      ENUM('Ativo', 'Trancado', 'Transferido', 'Formado') DEFAULT 'Ativo',
+    CONSTRAINT pk_aluno PRIMARY KEY (pk_ra),
+    CONSTRAINT uq_aluno_pessoa UNIQUE (fk_pessoa),
+    CONSTRAINT fk_aluno_pessoa FOREIGN KEY (fk_pessoa) REFERENCES tb_pessoa (pk_pessoa)
+);
+
+CREATE TABLE tb_responsavel (
+    pk_responsavel INT NOT NULL AUTO_INCREMENT,
+    fk_pessoa      INT NOT NULL,
+    profissao      VARCHAR(100),
+    CONSTRAINT pk_responsavel PRIMARY KEY (pk_responsavel),
+    CONSTRAINT fk_resp_pessoa FOREIGN KEY (fk_pessoa) REFERENCES tb_pessoa (pk_pessoa)
+);
+
+-- 6. MATRÍCULA E FINANCEIRO (AJUSTADA)
+CREATE TABLE tb_matricula (
+    pk_matricula    INT  NOT NULL AUTO_INCREMENT,
+    fk_ra_aluno     VARCHAR(20) NOT NULL,
+    fk_turma        INT  NOT NULL,
+    data_matricula  DATE NOT NULL, -- Removido o valor padrão para maior compatibilidade
+    valor_mensalidade DECIMAL(10,2) NOT NULL,
+    dia_vencimento  TINYINT NOT NULL DEFAULT 10,
+    CONSTRAINT pk_matricula PRIMARY KEY (pk_matricula),
+    CONSTRAINT uq_aluno_turma_ano UNIQUE (fk_ra_aluno, fk_turma),
+    CONSTRAINT fk_mat_aluno FOREIGN KEY (fk_ra_aluno) REFERENCES tb_aluno (pk_ra),
+    CONSTRAINT fk_mat_turma FOREIGN KEY (fk_turma) REFERENCES tb_turma (pk_turma)
+);
+
+CREATE TABLE tb_pagamento (
+    pk_pagamento    INT  NOT NULL AUTO_INCREMENT,
+    fk_matricula    INT  NOT NULL,
+    valor_devido    DECIMAL(10,2) NOT NULL,
+    valor_pago      DECIMAL(10,2),
+    data_vencimento DATE NOT NULL,
+    data_pagamento  DATE,
+    status_pgto     ENUM('Pendente', 'Pago', 'Atrasado', 'Cancelado') DEFAULT 'Pendente',
+    CONSTRAINT pk_pagamento PRIMARY KEY (pk_pagamento),
+    CONSTRAINT fk_pgto_mat FOREIGN KEY (fk_matricula) REFERENCES tb_matricula (pk_matricula)
+);
+
+-- 7. DESEMPENHO E GRADE
+CREATE TABLE tb_materia (
+    pk_materia   INT          NOT NULL AUTO_INCREMENT,
+    nome_materia VARCHAR(80)  NOT NULL,
+    carga_horaria INT,
+    CONSTRAINT pk_materia PRIMARY KEY (pk_materia),
+    CONSTRAINT uq_materia_nome UNIQUE (nome_materia)
+);
+
+CREATE TABLE tb_nota (
+    pk_nota         INT NOT NULL AUTO_INCREMENT,
+    fk_matricula    INT NOT NULL,
+    fk_materia      INT NOT NULL,
+    fk_professor    INT NOT NULL,
+    bimestre        TINYINT NOT NULL,
+    valor_nota      DECIMAL(4,2),
+    CONSTRAINT pk_nota PRIMARY KEY (pk_nota),
+    CONSTRAINT fk_nota_mat  FOREIGN KEY (fk_matricula) REFERENCES tb_matricula (pk_matricula),
+    CONSTRAINT fk_nota_disc FOREIGN KEY (fk_materia) REFERENCES tb_materia (pk_materia),
+    CONSTRAINT fk_nota_prof FOREIGN KEY (fk_professor) REFERENCES tb_professor (pk_professor),
+    CONSTRAINT chk_nota_valor CHECK (valor_nota >= 0 AND valor_nota <= 10)
+);
