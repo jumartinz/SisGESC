@@ -1,0 +1,67 @@
+Table tb_pessoa [headercolor: #e67e22] {
+  pk_id_pessoa int [pk, increment]
+  nome_completo varchar(255) [not null]
+  cpf char(11) [unique, not null]
+  data_nascimento date
+  telefone varchar (11)
+}
+
+Table tb_funcionario [headercolor: #e67e22] {
+  pk_id_funcionario int [pk, increment]
+  fk_id_pessoa int [unique, ref: - tb_pessoa.pk_id_pessoa]
+  data_admissao date
+}
+
+Table tb_cargo [headercolor: #e67e22] {
+  pk_id_cargo int [pk, increment]
+  nome_cargo varchar(100) [unique]
+}
+
+Table tb_historico_cargo [headercolor: #e67e22] {
+  pk_id_historico int [pk, increment]
+  fk_id_funcionario int [ref: > tb_funcionario.pk_id_funcionario]
+  fk_id_cargo int [ref: > tb_cargo.pk_id_cargo]
+  data_inicio date
+  data_fim date
+}
+
+Table tb_professor [headercolor: #e67e22] {
+  pk_id_professor int [pk, increment]
+  fk_id_funcionario int [unique, ref: - tb_funcionario.pk_id_funcionario]
+  especializacao varchar(255)
+}
+
+Table tb_aluno [headercolor: #3498db] {
+  ra varchar(8) [pk]
+  fk_id_pessoa int [unique, ref: - tb_pessoa.pk_id_pessoa]
+}
+
+Table tb_turma [headercolor: #3498db] {
+  pk_id_turma int [pk, increment]
+  nome_turma varchar(150)
+  ano_letivo int
+}
+
+Table tb_matricula [headercolor: #3498db] {
+  pk_id_matricula int [pk, increment]
+  fk_ra_aluno varchar(50) [ref: > tb_aluno.ra]
+  fk_id_turma int [ref: > tb_turma.pk_id_turma]
+  data_matricula date
+  status_matricula varchar(50)
+}
+
+Table tb_contrato_educacional [headercolor: #2ecc71] {
+  pk_id_contrato int [pk, increment]
+  fk_id_matricula int [unique, ref: - tb_matricula.pk_id_matricula]
+  valor_total decimal(10,2)
+  dia_vencimento int
+  data_assinatura date
+}
+
+Table tb_pagamento [headercolor: #2ecc71] {
+  pk_id_pagamento int [pk, increment]
+  fk_id_contrato int [ref: > tb_contrato_educacional.pk_id_contrato]
+  valor_parcela decimal(10,2)
+  data_vencimento date
+  status_pagamento varchar(50)
+}
