@@ -52,6 +52,7 @@ Dedicado à administração do capital humano, com foco especial nas competênci
 A estruturação do sistema é fundamentada no mapeamento detalhado dos fluxos de trabalho da gestão escolar, utilizando a metodologia de fluxogramas de processos. Essa abordagem garante que a arquitetura do banco de dados suporte fielmente as operações do mundo real.
 
 **Escopo da Modelagem**
+
 Os fluxos foram desenhados para cobrir as jornadas críticas da instituição, incluindo:
 - **Ciclo de Vida do Aluno:** Engloba desde o fluxo de Matrícula até a Gestão Acadêmica contínua durante o ano letivo.
 - **Operações Financeiras:** Mapeamento do Controle de Mensalidades, recebimentos e fluxos de caixa.
@@ -59,4 +60,5 @@ Os fluxos foram desenhados para cobrir as jornadas críticas da instituição, i
 - **Administração de Capital Humano:** Abrange fluxogramas de Gestão de Funcionários, além do monitoramento de *Férias e Ausências*.
 
 **Ferramental Técnico**
+
 Para a construção dos modelos visuais, está sendo utilizada a ferramenta **Draw.io**, permitindo uma documentação clara, padronizada e de fácil manutenção para a evolução do ERP.
