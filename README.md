@@ -26,4 +26,5 @@ O nível mais avançado do sitema utiliza o histórico armazenado para **antecip
 - **Mitigação de Riscos:** Identificação precoce de probabilidade de evasão e previsão de falhas nos pagamentos (inadimplência).
 - **Suporte Pedagógico:** Detecção automática de alunos com tendência a baixo rendimento escolar.
 - **Planejamento de Recursos:** Estimativa da demanda futura para otimização de infraestrutura e atividades complementares.
--
+
+# Estrutura ERP SisGesc
