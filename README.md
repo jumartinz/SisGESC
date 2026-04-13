@@ -4,3 +4,26 @@ Projeto acaêmico desenvolvido na disciplina **Banco de Dados** voltado para esc
 # Objetivo
 O nosso SisGESC tem como objetivo implementar o **ERP (Enterprise Resource Planning)** para melhoria da gestão administrativa de uma escola de ensino básico.
 Além da mogelagem tradicional de banco de dados, o projeto também explora a evolução dos dados desde o nível operacional, administrativo, financeiro, até a geração de analises automáticas de modelos.
+
+# Arquitetura do Projeto
+**Estrutura e Evolução dos Dados**
+O projeto foi arquitetado para gerenciar a jornada dos dados em três camadas distintas, indo desde a coleta cotidiana até a gereção de inteligencia estratégica.
+
+**1. Camada operacional (OLTP - On-line Transaction Processing)**
+Nesta estapa inicial, o sistema foca na **integridade a agilidade** do proxessamento de transações diárias. É onde ocorre a captura granular de eventos escolares:
+- **Gestão Administrativa:** Cadastro completo do *corpo docente/funcionários* e monitoramento de ponto.
+- **Gestão Acadêmica:** Controle de frequência, *registro de presença* e *lancamento de notas*.
+- **Gestão Financeira:** Processamento imediato de mensalidade e recebimentos.
+
+**2. Camada Analítica (OLAP - On-line Analytical Processing)**
+Aqui, os dados brutos são consolidados para apoiar a **tomada de decisão gerencial**. O foco é transformar registros isolados em indicadores de desempenho (KPIs):
+- **Análise de Performance:** Monitoramento das médias por matéria e engajamento em atividades extras.
+- **Saúde Financeira:** Visualização da taxa de inadimplência e apuração dos custo operacional real.
+- **Frequência Agregada:** Visão macro da assiduidade escolar para identificar padrões de comportamento.
+
+**3. Camada de Inteligencia (IA - Análise Preditiva)**
+O nível mais avançado do sitema utiliza o histórico armazenado para **antecipar cenários**. O objetivo é agir preventivamente através de modelos estatísticos e algorítimicos:
+- **Mitigação de Riscos:** Identificação precoce de probabilidade de evasão e previsão de falhas nos pagamentos (inadimplência).
+- **Suporte Pedagógico:** Detecção automática de alunos com tendência a baixo rendimento escolar.
+- **Planejamento de Recursos:** Estimativa da demanda futura para otimização de infraestrutura e atividades complementares.
+-
