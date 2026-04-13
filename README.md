@@ -70,3 +70,28 @@ Os fluxos foram desenhados para cobrir as jornadas críticas da instituição, i
 **Ferramental Técnico**
 
 Para a construção dos modelos visuais, está sendo utilizada a ferramenta **Draw.io**, permitindo uma documentação clara, padronizada e de fácil manutenção para a evolução do ERP.
+
+#Ciclo de Desenvolvimento e Etapas do Projeto
+
+O projeto é conduzido através de um roteiro metodológico que garante a transição entre o entendimento do negócio e a implementação técnica de alto nível. As etapas foram divididas nos seguintes marcos:
+
+**1. Arquitetura de Negócio e Processos**
+**Levantamento de Requisitos:** Identificação detalhada das necessidades operacionais e pedagógicas da instituição.
+
+**Modelagem de Processos:** Mapeamento visual dos fluxos de trabalho escolares.
+
+**Definição de Regras de Negócio:** Estabelecimento das normas que regem as operações (ex: critérios de aprovação, prazos de pagamento).
+
+**2. Engenharia de Dados**
+**Identificação de Entidades:** Catalogação de todos os objetos fundamentais do sistema (Alunos, Professores, Contratos).
+
+**Dicionário de Dados:** Documentação técnica contendo a definição, tipos e limites de cada atributo.
+
+**Modelagem Conceitual:** Construção do Diagrama Entidade-Relacionamento (DER) de alto nível.
+
+**Modelagem Lógica:** Refinamento da estrutura para o modelo relacional (Tabelas e Chaves).
+
+**3. Inteligência e Estratégia**
+**Preparação para Análise OLAP:** Estruturação dos dados para permitir consultas analíticas e geração de indicadores (KPIs).
+
+**Definição de Perguntas para IA:** Elaboração dos questionamentos que guiarão a criação de modelos preditivos e análises avançadas.
